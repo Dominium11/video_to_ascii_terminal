@@ -3,6 +3,7 @@ from PIL import Image
 from os import system
 import ctypes
 from sys import argv
+import time 
 
 LF_FACESIZE = 32
 STD_OUTPUT_HANDLE = -11
@@ -17,8 +18,10 @@ class CONSOLE_FONT_INFOEX(ctypes.Structure):
                 ("FontFamily", ctypes.c_uint),
                 ("FontWeight", ctypes.c_uint),
                 ("FaceName", ctypes.c_wchar * LF_FACESIZE)]
-
-captureFile = argv[1]
+try:
+     captureFile = argv[1]
+except:
+     captureFile = "bad_apple.mp4"
 
 vidcap = cv2.VideoCapture(captureFile)
 count = 0
@@ -29,7 +32,8 @@ height = int(vidcap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 #print(width)
 #print(height)
-resMod = 4
+targetFramerate = 60
+resMod = 3
 width = width//resMod
 height = height//resMod
 
@@ -49,18 +53,25 @@ ctypes.windll.kernel32.SetCurrentConsoleFontEx(
 system(f'mode con: cols={width} lines={height}')
 
 while success:
+     start = time.time()
      success,image = vidcap.read()
      frame = ''
      for cols in range(0,height):
+          buffer = []
           for rows in range(0,width):
                x = image[cols*resMod][rows*resMod][0]      
-               if(x<25): frame += "$"
-               elif(x>225): frame += " "
-               elif(x<75): frame += "F"
-               elif(x<125): frame += "l"
-               elif(x<175): frame += "!"
-               elif(x<225): frame += "."
-          frame += "\n"
+               if(x<25): buffer.append("$")
+               elif(x>225): buffer.append(" ")
+               elif(x<75): buffer.append("F")
+               elif(x<125): buffer.append("l")
+               elif(x<175): buffer.append("!")
+               elif(x<225): buffer.append(".")
+          buffer.append("\n")
+          frame += ''.join(buffer)
      system('cls')
      print(frame)
+     end = time.time()
+     elapsed = end-start
+     if(elapsed<1/targetFramerate):
+          time.sleep(elapsed-(1/targetFramerate))
      
