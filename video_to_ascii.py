@@ -2,7 +2,7 @@ import cv2
 from PIL import Image
 from os import system
 import ctypes
-from sys import argv
+from sys import argv, stdout
 import time 
 
 LF_FACESIZE = 32
@@ -20,28 +20,28 @@ class CONSOLE_FONT_INFOEX(ctypes.Structure):
                 ("FaceName", ctypes.c_wchar * LF_FACESIZE)]
 try:
      captureFile = argv[1]
+     resMod = int(argv[2])
 except:
      captureFile = "bad_apple.mp4"
+     resMod = 3
 
 vidcap = cv2.VideoCapture(captureFile)
 count = 0
 success = True
-fps = int(vidcap.get(cv2.CAP_PROP_FPS))
+targetFramerate = int(vidcap.get(cv2.CAP_PROP_FPS))
 width  = int(vidcap.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(vidcap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 #print(width)
 #print(height)
-targetFramerate = 60
-resMod = 3
 width = width//resMod
 height = height//resMod
 
 font = CONSOLE_FONT_INFOEX()
 font.cbSize = ctypes.sizeof(CONSOLE_FONT_INFOEX)
 font.nFont = 12
-font.dwFontSize.X = 16-2*resMod
-font.dwFontSize.Y = 16-2*resMod
+font.dwFontSize.X = 20-2*resMod
+font.dwFontSize.Y = 20-2*resMod
 font.FontFamily = 54
 font.FontWeight = 400
 font.FaceName = "Lucida Sans Typewriter"
@@ -69,9 +69,9 @@ while success:
           buffer.append("\n")
           frame += ''.join(buffer)
      system('cls')
-     print(frame)
+     stdout.write(frame)
      end = time.time()
      elapsed = end-start
      if(elapsed<1/targetFramerate):
-          time.sleep(elapsed-(1/targetFramerate))
+          time.sleep((1/targetFramerate)-elapsed)
      
