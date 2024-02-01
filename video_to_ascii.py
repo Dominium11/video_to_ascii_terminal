@@ -70,6 +70,7 @@ class bcolors:
 while success:
      start = time.time()
      success,image = vidcap.read()
+     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
      frame = ''
      frameX = []
      for cols in range(0,height):
@@ -78,12 +79,12 @@ while success:
                x = image[cols*resMod][rows*resMod]
                x = x.tolist()      
 
-               if(x[0]<25): buffer.append("$")
-               elif(x[0]>225): buffer.append(" ")
-               elif(x[0]<75): buffer.append("F")
-               elif(x[0]<125): buffer.append("l")
-               elif(x[0]<175): buffer.append("!")
-               elif(x[0]<225): buffer.append(".")
+               if(x<25): buffer.append("$")
+               elif(x>225): buffer.append(" ")
+               elif(x<75): buffer.append("F")
+               elif(x<125): buffer.append("l")
+               elif(x<175): buffer.append("!")
+               elif(x<225): buffer.append(".")
           buffer.append("\n")
           frameX.append(''.join(buffer))
      frame = ''.join(frameX)
