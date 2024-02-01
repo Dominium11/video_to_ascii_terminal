@@ -40,8 +40,19 @@ height = height//resMod
 font = CONSOLE_FONT_INFOEX()
 font.cbSize = ctypes.sizeof(CONSOLE_FONT_INFOEX)
 font.nFont = 12
-font.dwFontSize.X = 20-2*resMod
-font.dwFontSize.Y = 20-2*resMod
+match resMod:
+     case 1:
+          fontSize = 2
+     case 2:
+          fontSize = 6
+     case 3:
+          fontSize = 11
+     case 4:
+          fontSize = 15
+     case 5:
+          fontSize = 19
+font.dwFontSize.X = fontSize
+font.dwFontSize.Y = fontSize
 font.FontFamily = 54
 font.FontWeight = 400
 font.FaceName = "Lucida Sans Typewriter"
@@ -52,22 +63,30 @@ ctypes.windll.kernel32.SetCurrentConsoleFontEx(
 
 system(f'mode con: cols={width} lines={height}')
 
+class bcolors:
+     BWHITE = '\033[97m'
+     WHITE = '\033[37m'
+     BGREY = '\033[90m'
 while success:
      start = time.time()
      success,image = vidcap.read()
      frame = ''
+     frameX = []
      for cols in range(0,height):
           buffer = []
           for rows in range(0,width):
-               x = image[cols*resMod][rows*resMod][0]      
-               if(x<25): buffer.append("$")
-               elif(x>225): buffer.append(" ")
-               elif(x<75): buffer.append("F")
-               elif(x<125): buffer.append("l")
-               elif(x<175): buffer.append("!")
-               elif(x<225): buffer.append(".")
+               x = image[cols*resMod][rows*resMod]
+               x = x.tolist()      
+
+               if(x[0]<25): buffer.append("$")
+               elif(x[0]>225): buffer.append(" ")
+               elif(x[0]<75): buffer.append("F")
+               elif(x[0]<125): buffer.append("l")
+               elif(x[0]<175): buffer.append("!")
+               elif(x[0]<225): buffer.append(".")
           buffer.append("\n")
-          frame += ''.join(buffer)
+          frameX.append(''.join(buffer))
+     frame = ''.join(frameX)
      system('cls')
      stdout.write(frame)
      end = time.time()
