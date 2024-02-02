@@ -20,10 +20,13 @@ class CONSOLE_FONT_INFOEX(ctypes.Structure):
                 ("FaceName", ctypes.c_wchar * LF_FACESIZE)]
 try:
      captureFile = argv[1]
+except:
+     raise Exception("Specify video path.")
+
+try:
      resMod = int(argv[2])
 except:
-     captureFile = "bad_apple.mp4"
-     resMod = 3
+     resMod = 2
 
 vidcap = cv2.VideoCapture(captureFile)
 count = 0
