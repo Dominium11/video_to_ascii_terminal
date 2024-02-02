@@ -33,6 +33,8 @@ count = 0
 success = True
 targetFramerate = int(vidcap.get(cv2.CAP_PROP_FPS))
 width  = int(vidcap.get(cv2.CAP_PROP_FRAME_WIDTH))
+#print(targetFramerate)
+#exit()
 height = int(vidcap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 #print(width)
@@ -84,9 +86,12 @@ while success:
 
                if(x<25): buffer.append("$")
                elif(x>225): buffer.append(" ")
+               elif(x<50): buffer.append("E")
                elif(x<75): buffer.append("F")
-               elif(x<125): buffer.append("l")
-               elif(x<175): buffer.append("!")
+               elif(x<100): buffer.append("l")
+               elif(x<125): buffer.append("!")
+               elif(x<175): buffer.append(";")
+               elif(x<200): buffer.append(",")
                elif(x<225): buffer.append(".")
           buffer.append("\n")
           frameX.append(''.join(buffer))
